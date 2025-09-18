@@ -1,5 +1,7 @@
+// pages/products.js
 export default async function handler(req, res) {
   try {
+    // Load token from environment variable
     const STORE_TOKEN = process.env.FOURTHWALL_STORE_TOKEN;
 
     if (!STORE_TOKEN) {
@@ -25,5 +27,6 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
 
 
