@@ -1,32 +1,24 @@
-// pages/products.js
 export default async function handler(req, res) {
   try {
-    // Load token from environment variable
-    const STORE_TOKEN = process.env.FOURTHWALL_STORE_TOKEN;
-
-    if (!STORE_TOKEN) {
-      return res.status(500).json({ error: "Store token not configured" });
-    }
-
     const response = await fetch("https://api.fourthwall.com/v1/products", {
       headers: {
-        Authorization: `Bearer ${STORE_TOKEN}`,
-        "Content-Type": "application/json"
-      }
+        Authorization: `Bearer ${process.env.FW_TOKEN}`,
+        "Content-Type": "application/json",
+      },
     });
 
     if (!response.ok) {
-      const text = await response.text();
-      return res.status(response.status).json({ error: text });
+      return res.status(response.status).json({ error: "Failed to fetch products" });
     }
 
-    const products = await response.json();
-    res.status(200).json(products);
-  } catch (error) {
-    console.error(error);
+    const data = await response.json();
+    res.status(200).json(data);
+  } catch (err) {
+    console.error(err);
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
 
 
 
