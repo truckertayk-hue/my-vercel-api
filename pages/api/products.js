@@ -1,34 +1,29 @@
-// pages/products.js
+export default async function handler(req, res) {
+  try {
+    const STORE_TOKEN = process.env.FOURTHWALL_STORE_TOKEN;
 
-export default function Products() {
-  return (
-    <div
-      style={{
-        fontFamily: 'Arial, sans-serif',
-        padding: '2rem',
-        maxWidth: '800px',
-        margin: '0 auto',
-      }}
-    >
-      <h1 style={{ fontSize: '2rem', marginBottom: '1rem' }}>Our Products</h1>
-      <p style={{ marginBottom: '2rem' }}>
-        Browse our products below. Powered by Fourthwall.
-      </p>
+    if (!STORE_TOKEN) {
+      return res.status(500).json({ error: "Store token not configured" });
+    }
 
-      {/* Fourthwall embed container */}
-      <div id="fourthwall-store"></div>
+    const response = await fetch("https://api.fourthwall.com/v1/products", {
+      headers: {
+        Authorization: `Bearer ${STORE_TOKEN}`,
+        "Content-Type": "application/json"
+      }
+    });
 
-      {/* Embed script */}
-      <script
-        src="https://cdn.fourthwall.com/embed.js"
-        data-store-token={process.env.NEXT_PUBLIC_FOURTHWALL_TOKEN}
-        async
-      ></script>
+    if (!response.ok) {
+      const text = await response.text();
+      return res.status(response.status).json({ error: text });
+    }
 
-      <p style={{ marginTop: '2rem', fontSize: '0.9rem', color: '#555' }}>
-        All transactions are processed securely by Fourthwall.
-      </p>
-    </div>
-  );
+    const products = await response.json();
+    res.status(200).json(products);
+  } catch (error) {
+    console.error(error);
+    res.status(500).json({ error: "Internal server error" });
+  }
 }
+
 
