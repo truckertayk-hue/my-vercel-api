@@ -1,6 +1,3 @@
-
-
-
 import { useEffect, useState } from "react";
 
 export default function ProductsPage() {
@@ -11,7 +8,7 @@ export default function ProductsPage() {
   useEffect(() => {
     async function fetchProducts() {
       try {
-        const response = await fetch("/api/products");
+        const response = await fetch("/api/products"); // keep it as /api/products
         if (!response.ok) throw new Error(`HTTP error! status: ${response.status}`);
         const data = await response.json();
         setProducts(data);
@@ -44,3 +41,4 @@ export default function ProductsPage() {
     </div>
   );
 }
+
