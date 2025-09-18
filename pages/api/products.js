@@ -1,8 +1,9 @@
+// pages/api/products.js
 export default async function handler(req, res) {
   try {
     const response = await fetch("https://api.fourthwall.com/v1/products", {
       headers: {
-        Authorization: `Bearer ${process.env.FW_TOKEN}`,
+        Authorization: `Bearer ${process.env.FW_TOKEN}`, // Use env variable
         "Content-Type": "application/json",
       },
     });
@@ -18,6 +19,7 @@ export default async function handler(req, res) {
     res.status(500).json({ error: "Internal server error" });
   }
 }
+
 
 
 
