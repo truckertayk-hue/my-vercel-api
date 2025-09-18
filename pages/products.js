@@ -1,8 +1,9 @@
-// pages/products.js
 import { useEffect, useState } from "react";
 
 export default function ProductsPage() {
   const [products, setProducts] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [error, setError] = useState(null);
 
   useEffect(() => {
     async function fetchProducts() {
@@ -12,52 +13,32 @@ export default function ProductsPage() {
         const data = await response.json();
         setProducts(data);
       } catch (err) {
-        console.error(err);
+        console.error("Failed to fetch products:", err);
+        setError(err.message);
+      } finally {
+        setLoading(false);
       }
     }
+
     fetchProducts();
   }, []);
 
+  if (loading) return <p>Loading products...</p>;
+  if (error) return <p>Error: {error}</p>;
+
   return (
-    <div style={{ padding: "2rem", fontFamily: "Arial, sans-serif" }}>
+    <div style={{ padding: "2rem" }}>
       <h1>Our Products</h1>
       <p>Browse our products below. Powered by Fourthwall.</p>
-      <div style={{ display: "flex", gap: "2rem", flexWrap: "wrap" }}>
+      <ul>
         {products.map((product) => (
-          <div
-            key={product.id}
-            style={{
-              border: "1px solid #ccc",
-              borderRadius: "8px",
-              padding: "1rem",
-              width: "200px",
-              textAlign: "center",
-            }}
-          >
-            <h2>{product.name}</h2>
-            <p>${product.price}</p>
-            <a
-              href={`https://checkout.fourthwall.com/products/${product.id}`}
-              target="_blank"
-              rel="noopener noreferrer"
-              style={{
-                display: "inline-block",
-                marginTop: "1rem",
-                padding: "0.5rem 1rem",
-                backgroundColor: "#0070f3",
-                color: "#fff",
-                borderRadius: "4px",
-                textDecoration: "none",
-              }}
-            >
-              Buy Now
-            </a>
-          </div>
+          <li key={product.id}>
+            <strong>{product.name}</strong> - ${product.price}
+          </li>
         ))}
-      </div>
-      <p style={{ marginTop: "2rem" }}>
-        All transactions are processed securely by Fourthwall.
-      </p>
+      </ul>
+      <p>All transactions are processed securely by Fourthwall.</p>
     </div>
   );
 }
+
