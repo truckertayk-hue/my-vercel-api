@@ -1,3 +1,6 @@
+
+
+
 import { useEffect, useState } from "react";
 
 export default function ProductsPage() {
@@ -41,5 +44,3 @@ export default function ProductsPage() {
     </div>
   );
 }
-
-
